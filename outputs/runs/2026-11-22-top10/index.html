@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>投資學入門手帳</title>
+<!-- 可選用的手寫風字型；離線時會自動改用系統字型 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* 主視覺：淺藍 × 淺咖啡（拿鐵） */
+    --ink: #5b4a3c;
+    --soft-ink: #9a8571;
+    --paper: #fffcf7;
+    --grid: #e4edf6;
+    --desk: #e6eef6;
+    --sky: #dbe8f5;        /* 淺藍 */
+    --sky-d: #8fb2d6;
+    --sky-dd: #5f8cba;
+    --latte: #efe2d1;      /* 淺咖啡 */
+    --latte-d: #c9a88a;
+    --latte-dd: #9c7a5b;
+    /* 舊變數名稱一律對應到兩個主色 */
+    --pink: var(--sky);    --pink-d: var(--sky-dd);
+    --yellow: var(--latte); --yellow-d: var(--latte-d);
+    --mint: var(--sky);    --mint-d: var(--sky-dd);
+    --blue: var(--sky);    --blue-d: var(--sky-dd);
+    --lilac: var(--latte); --lilac-d: var(--latte-dd);
+    --peach: var(--latte); --peach-d: var(--latte-dd);
+    --dots-w: radial-gradient(rgba(255,255,255,.9) 3px, transparent 3.6px) 0 0 / 18px 18px;
+    --star-sky: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.5l2.6 6.2 6.7.5-5.1 4.4 1.6 6.5L12 16.6l-5.8 3.5 1.6-6.5-5.1-4.4 6.7-.5z' fill='%238fb2d6' stroke='%238fb2d6' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E");
+    --star-latte: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.5l2.6 6.2 6.7.5-5.1 4.4 1.6 6.5L12 16.6l-5.8 3.5 1.6-6.5-5.1-4.4 6.7-.5z' fill='%23c9a88a' stroke='%23c9a88a' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E");
+    --font: "LXGW WenKai TC", "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: var(--font);
+    color: var(--ink);
+    overflow: hidden;
+    background-color: var(--desk);
+    background-image: radial-gradient(#fff 3px, transparent 3.6px), radial-gradient(#fff 3px, transparent 3.6px);
+    background-size: 36px 36px;
+    background-position: 0 0, 18px 18px;
+  }
+
+  /* ================= notebook page ================= */
+  .stage {
+    position: absolute;
+    left: 50%; top: calc(50% - 26px);
+    width: 1280px; height: 720px;
+    transform: translate(-50%, -50%) scale(var(--s, 1));
+    border-radius: 10px 22px 22px 10px;
+    overflow: hidden;
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 32px 32px;
+    box-shadow: 0 2px 0 #e3d6c4, 0 4px 0 #f9f2e8, 0 6px 0 #e3d6c4, 0 24px 50px rgba(70,90,120,.22);
+  }
+  /* binder holes */
+  .stage::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 58px; z-index: 3;
+    background:
+      radial-gradient(circle at 29px 30px, #e6eef6 0 9px, #c9a88a 9px 10.5px, transparent 11.5px) 0 0 / 58px 60px repeat-y,
+      linear-gradient(90deg, #f3e9dc, #f9f2e8);
+    border-right: 2px dashed #e3d6c4;
+  }
+  /* index tabs on the right edge */
+  .tabs { position: absolute; right: 0; top: 54px; z-index: 4; display: flex; flex-direction: column; gap: 6px; }
+  .tabs span {
+    display: block; width: 34px; height: 44px; border-radius: 10px 0 0 10px;
+    font-size: 14px; font-weight: 700; color: #5b4a3c; text-align: center; line-height: 44px;
+    opacity: .75; transition: all .25s; cursor: pointer;
+  }
+  .tabs span.on { width: 48px; opacity: 1; box-shadow: -3px 2px 6px rgba(0,0,0,.12); }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: none; flex-direction: column;
+    padding: 40px 92px 30px 112px;
+  }
+  .slide.active { display: flex; animation: pop .4s ease; }
+  /* 每頁右上角的小星星 */
+  .slide::after {
+    content: ""; position: absolute; right: 70px; top: 22px; width: 120px; height: 70px; pointer-events: none;
+    background:
+      var(--star-sky) 0 30px / 22px 22px no-repeat,
+      var(--star-latte) 40px 4px / 16px 16px no-repeat,
+      var(--star-sky) 78px 22px / 14px 14px no-repeat,
+      var(--star-latte) 100px 48px / 18px 18px no-repeat;
+  }
+  .slide.cover::after { display: none; }
+  @keyframes pop { from { opacity: 0; transform: translateY(10px) rotate(-.3deg); } to { opacity: 1; transform: none; } }
+
+  /* ================= header ================= */
+  .head { display: flex; align-items: center; gap: 22px; margin-bottom: 24px; position: relative; }
+  .stamp {
+    flex: none; width: 84px; height: 84px; border-radius: 50%;
+    border: 3px dashed var(--sky-dd); color: var(--sky-dd);
+    display: grid; place-items: center; text-align: center;
+    transform: rotate(-10deg);
+    background: radial-gradient(var(--sky) 2.5px, transparent 3px) 0 0 / 12px 12px, #fff;
+    font-weight: 700; line-height: 1;
+  }
+  .stamp small { display: block; font-size: 13px; letter-spacing: 1px; }
+  .stamp b { display: block; font-size: 32px; margin-top: 2px; }
+  .head h2 { font-size: 42px; font-weight: 700; display: inline-block; padding-bottom: 8px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='10'%3E%3Cpath d='M0 6 Q10 1 20 6 T40 6' fill='none' stroke='%238fb2d6' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x left bottom / 40px 10px; }
+  .head p { font-size: 21px; color: var(--soft-ink); margin-top: 6px; }
+  .head .deco { margin-left: auto; font-size: 46px; transform: rotate(8deg); }
+
+  .body { flex: 1; display: flex; flex-direction: column; gap: 20px; font-size: 23px; line-height: 1.6; position: relative; }
+  .row { display: flex; gap: 26px; align-items: stretch; }
+  .row > * { flex: 1; }
+
+  /* ================= stationery ================= */
+  .sticky {
+    position: relative; padding: 22px 24px 20px; border-radius: 3px 3px 18px 3px;
+    background: var(--latte); box-shadow: 0 8px 14px rgba(90,70,40,.12);
+    transform: rotate(var(--r, -1deg));
+  }
+  .sticky h3 { font-size: 26px; margin-bottom: 6px; }
+  .sticky p, .sticky li { font-size: 20px; line-height: 1.6; }
+  .sticky ul { list-style: none; }
+  .sticky li::before { content: "✿ "; color: var(--soft-ink); }
+  /* 便利貼只用兩個主色，再用波點做變化 */
+  .blue   { background: var(--sky); }
+  .yellow { background: var(--latte); }
+  .pink   { background: var(--dots-w), var(--sky); }                       /* 淺藍白波點 */
+  .peach  { background: var(--dots-w), var(--latte); }                     /* 淺咖啡白波點 */
+  .mint   { background: radial-gradient(#e2ecf7 3px, transparent 3.6px) 0 0 / 18px 18px, #fffaf3; }   /* 米白藍波點 */
+  .lilac  { background: radial-gradient(#f1e7da 3px, transparent 3.6px) 0 0 / 18px 18px, #fffaf3; }   /* 米白咖啡波點 */
+  .emoji { font-size: 40px; line-height: 1; display: block; margin-bottom: 6px; }
+
+  .card {
+    position: relative; background: #fff; border: 2px solid #efe6d6; border-radius: 18px;
+    padding: 22px 26px; box-shadow: 0 4px 0 #efe6d6;
+  }
+  .card h3 { font-size: 25px; margin-bottom: 6px; }
+  .card p, .card li { font-size: 20px; }
+
+  .tape {
+    position: absolute; width: 110px; height: 28px; top: -14px; left: 50%; margin-left: -55px; z-index: 2;
+    transform: rotate(var(--tr, -4deg)); opacity: .85;
+    background: radial-gradient(#fff 3px, transparent 3.5px) 0 0 / 14px 14px, #b9d2ea;   /* 淺藍波點紙膠帶 */
+    box-shadow: 0 1px 2px rgba(0,0,0,.08);
+  }
+  .tape.mint-t { background: radial-gradient(#fff 3px, transparent 3.5px) 0 0 / 14px 14px, #d9c1a6; }   /* 咖啡波點 */
+  .tape.blue-t { background: var(--star-latte) 0 3px / 18px 18px, #dbe8f5; background-repeat: repeat-x; }  /* 藍底星星 */
+  .tape.yellow-t { background: var(--star-sky) 0 3px / 18px 18px, #efe2d1; background-repeat: repeat-x; } /* 咖啡底星星 */
+
+  .hl { background: linear-gradient(transparent 55%, #cfe1f3 55%, #cfe1f3 92%, transparent 92%); padding: 0 2px; }
+  .hl.p { background: linear-gradient(transparent 55%, #ead8c3 55%, #ead8c3 92%, transparent 92%); }
+  .hl.g { background: linear-gradient(transparent 55%, #cfe1f3 55%, #cfe1f3 92%, transparent 92%); }
+
+  /* emoji 統一成淺咖啡單色，避免顏色太雜 */
+  .em { filter: grayscale(1) sepia(.55) saturate(1.25) brightness(1.03); }
+  .sky .em, .em.sky { filter: grayscale(1) sepia(.6) hue-rotate(170deg) saturate(1.4) brightness(1.08); }
+  .big { font-size: 32px; font-weight: 700; line-height: 1.5; }
+  .muted { color: var(--soft-ink); }
+  .small { font-size: 18px; }
+  .center { text-align: center; }
+
+  /* mascot speech bubble */
+  .tip { display: flex; align-items: flex-start; gap: 14px; }
+  .tip .face { font-size: 50px; line-height: 1; flex: none; }
+  .tip .bubble {
+    position: relative; background: #fff; border: 2px solid var(--ink); border-radius: 18px;
+    padding: 10px 18px; font-size: 18px; line-height: 1.55;
+  }
+  .tip .bubble::before {
+    content: ""; position: absolute; left: -11px; top: 16px; width: 18px; height: 18px;
+    background: #fff; border-left: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: rotate(45deg);
+  }
+  .tip .bubble b.who { color: var(--pink-d); }
+
+  /* doodle flow */
+  .flow { display: flex; align-items: center; gap: 10px; }
+  .flow .bub { flex: 1; text-align: center; padding: 14px 10px; border-radius: 20px; border: 2px dashed #d9cbb3; background: rgba(255,255,255,.85); }
+  .flow .bub .emoji { font-size: 38px; margin-bottom: 4px; }
+  .flow .bub b { display: block; font-size: 21px; }
+  .flow .bub span { display: block; font-size: 15px; color: var(--soft-ink); line-height: 1.45; margin-top: 2px; }
+  .flow .go { font-size: 30px; color: var(--sky-d); flex: none; font-weight: 700; }
+
+  /* to-do list */
+  .todo { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 44px; }
+  .todo div { display: flex; align-items: center; gap: 14px; font-size: 23px; padding: 9px 0; border-bottom: 2px dotted #e3d8c5; }
+  .todo i { flex: none; width: 26px; height: 26px; border: 2.5px solid var(--ink); border-radius: 6px; font-style: normal; display: grid; place-items: center; font-size: 20px; color: var(--pink-d); font-weight: 700; }
+  .todo em { font-style: normal; color: var(--soft-ink); font-size: 17px; width: 28px; flex: none; }
+
+  /* round stickers */
+  .sticker {
+    width: 190px; height: 190px; border-radius: 50%; display: grid; place-items: center; text-align: center;
+    border: 5px solid #fff; box-shadow: 0 6px 14px rgba(90,70,40,.18); transform: rotate(var(--r, 0deg));
+  }
+  .sticker .n { font-size: 50px; font-weight: 700; line-height: 1; }
+  .sticker .l { font-size: 17px; margin-top: 6px; }
+
+  /* hand-drawn bar */
+  .hbar { display: flex; height: 50px; border: 2.5px solid var(--ink); border-radius: 14px; overflow: hidden; font-size: 18px; font-weight: 700; }
+  .hbar div { display: flex; align-items: center; justify-content: center; }
+  .hbar .a { background: repeating-linear-gradient(45deg, #dcc3a6 0 8px, #efe2d1 8px 16px); border-right: 2.5px solid var(--ink); }
+  .hbar .b { background: radial-gradient(#fff 3px, transparent 3.6px) 0 0 / 16px 16px, #c3d9ee; }
+
+  /* footnote */
+  .src { margin-top: 14px; font-size: 14px; color: var(--soft-ink); display: flex; justify-content: space-between; gap: 16px; }
+  .src a { color: #5f8cba; text-decoration: none; border-bottom: 1px dashed #8fb2d6; }
+
+  /* ================= cover & recap ================= */
+  .cover { justify-content: center; align-items: center; }
+  .label {
+    position: relative; background: #fff; border-radius: 20px; padding: 46px 70px 40px; text-align: center;
+    box-shadow: 0 10px 0 #efe6d6, 0 20px 40px rgba(90,70,40,.15); border: 2px solid #efe6d6; transform: rotate(-1deg);
+  }
+  .label .tape { width: 150px; margin-left: -75px; top: -16px; }
+  .label .kicker { font-size: 20px; letter-spacing: 6px; color: var(--sky-dd); font-weight: 700; }
+  .label::after {
+    content: ""; position: absolute; left: 14px; right: 14px; top: 14px; bottom: 14px; pointer-events: none;
+    border: 2px dashed var(--latte-d); border-radius: 14px; opacity: .6;
+  }
+  .float-star { position: absolute; width: 30px; height: 30px; background: var(--star-sky) center / contain no-repeat; }
+  .float-star.l { background-image: var(--star-latte); }
+  .label h1 { font-size: 60px; line-height: 1.3; margin: 14px 0 16px; }
+  .label .sub { font-size: 22px; color: var(--soft-ink); line-height: 1.7; }
+  .float { position: absolute; font-size: 56px; }
+  .date-stamp {
+    position: absolute; right: 150px; bottom: 70px; width: 120px; height: 120px; border-radius: 50%;
+    border: 3px solid var(--latte-d); color: var(--latte-dd); display: grid; place-items: center; text-align: center;
+    transform: rotate(14deg); font-weight: 700; font-size: 18px; line-height: 1.3; opacity: .85;
+  }
+
+  /* ================= nav ================= */
+  .nav { position: fixed; left: 0; right: 0; bottom: 0; height: 52px; display: flex; align-items: center; justify-content: center; gap: 16px; font-size: 16px; color: #9a8571; user-select: none; }
+  .nav button { background: #fff; color: var(--ink); border: 2px solid var(--ink); border-radius: 999px; width: 44px; height: 34px; font-size: 18px; cursor: pointer; font-family: var(--font); box-shadow: 0 3px 0 var(--ink); }
+  .nav button:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
+  .nav button:disabled { opacity: .35; cursor: default; }
+  .nav .hint { color: #9a8571; font-size: 14px; }
+
+  /* C5-6 修正（第 1 次版面檢查）：內容垂直置中，卡片文字放大，避免下半頁空白 */
+  .body { justify-content: center; }
+  .card { padding: 26px 30px; }
+  .card h3 { font-size: 27px; margin-bottom: 10px; }
+  .card p { font-size: 22px; line-height: 1.8; }
+
+  @media print {
+    @page { size: 1280px 720px; margin: 0; }
+    body { background: #fff; overflow: visible; }
+    .nav, .tabs { display: none; }
+    .stage { position: relative; left: 0; top: 0; transform: none; box-shadow: none; border-radius: 0; width: 1280px; height: auto; overflow: visible; background: none; }
+    .stage::before { display: none; }
+    .slide { position: relative; display: flex !important; width: 1280px; height: 720px; break-after: page; animation: none;
+      background-color: var(--paper);
+      background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 32px 32px; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+  <div class="tabs" id="tabs"></div>
+
+  <!-- 封面 V-cover -->
+  <section class="slide cover" data-tab="★">
+    <span class="float" style="left:150px; top:90px; transform:rotate(-12deg)">🐷</span>
+    <span class="float" style="right:170px; top:80px; transform:rotate(10deg)">🌱</span>
+    <span class="float" style="left:190px; bottom:110px; transform:rotate(8deg)">💰</span>
+    <span class="float" style="right:320px; bottom:60px; font-size:44px">📈</span>
+    <span class="float-star" style="left:260px; top:60px"></span>
+    <span class="float-star l" style="left:300px; top:110px; width:20px; height:20px"></span>
+    <span class="float-star l" style="right:260px; top:150px; width:24px; height:24px"></span>
+    <span class="float-star" style="right:120px; top:240px; width:18px; height:18px"></span>
+    <span class="float-star" style="left:120px; bottom:200px; width:22px; height:22px"></span>
+    <span class="float-star l" style="left:330px; bottom:70px"></span>
+    <span class="float-star" style="right:440px; bottom:120px; width:16px; height:16px"></span>
+    <div class="label">
+      <span class="tape"></span>
+      <div class="kicker">MY INVESTING NOTEBOOK</div>
+      <h1>投資學入門手帳<br><span class="hl p">新手必知的10件小事</span></h1>
+      <div class="sub">投資沒有想像中可怕，我們一頁一頁慢慢來<br>整理自投資學 LLM Wiki・第 1 章「投資：背景與議題」</div>
+    </div>
+    <div class="date-stamp">2026<br>11.22<br>START!</div>
+  </section>
+
+  <!-- 目錄 V-todo -->
+  <section class="slide" data-tab="✓">
+    <div class="head"><div class="stamp"><small>TODAY</small><b>✎</b></div><div><h2>今日待辦清單</h2><p>看完這 10 件小事，你就正式入門啦！</p></div><span class="deco">📒</span></div>
+    <div class="body">
+      <div class="todo">
+        <div><i></i><em>01</em>投資到底是什麼？</div>
+        <div><i></i><em>06</em>投資要做的兩個決定</div>
+        <div><i></i><em>02</em>實質資產 vs 金融資產</div>
+        <div><i></i><em>07</em>沒有白吃的午餐</div>
+        <div><i></i><em>03</em>金融資產三兄弟</div>
+        <div><i></i><em>08</em>佛系 vs 積極派</div>
+        <div><i></i><em>04</em>金融市場的四個超能力</div>
+        <div><i></i><em>09</em>市場裡有誰？</div>
+        <div><i></i><em>05</em>老闆和員工的小矛盾</div>
+        <div><i></i><em>10</em>2008 年金融危機的教訓</div>
+      </div>
+      <div class="tip" style="margin-top:6px">
+        <span class="face">🐷</span>
+        <div class="bubble"><b class="who">小豬老師：</b>每看完一件就在心裡打個勾，最後一頁會幫你全部勾起來！</div>
+      </div>
+    </div>
+    <div class="src"><span>📎 出處：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/index.md">wiki/index.md</a></span><span>L01 投影片 2</span></div>
+  </section>
+
+  <!-- 01 V-flow -->
+  <section class="slide" data-tab="01">
+    <div class="head"><div class="stamp"><small>No.</small><b>01</b></div><div><h2>投資到底是什麼？</h2><p>一句話：先忍住，未來換更多</p></div><span class="deco">🌱</span></div>
+    <div class="body">
+      <div class="big">投資＝<span class="hl">延遲目前的消費</span>，換取<span class="hl p">未來更大的收益</span>。</div>
+      <div class="flow">
+        <div class="bub"><span class="emoji">🍰</span><b>今天的錢</b><span>手上現在就可以花的錢</span></div>
+        <div class="go">➜</div>
+        <div class="bub"><span class="emoji">⏳</span><b>付出時間</b><span>錢會被綁住一段時間</span></div>
+        <div class="go">＋</div>
+        <div class="bub"><span class="emoji">🎢</span><b>承擔風險</b><span>結果不一定如預期</span></div>
+        <div class="go">➜</div>
+        <div class="bub" style="background:var(--sky); border-color:var(--sky-d)"><span class="emoji">🍰🍰</span><b>未來收益</b><span>期待拿回更大的收益</span></div>
+      </div>
+      <div class="sticky peach" style="--r:-1deg; width:80%; align-self:center">
+        <p>📌 例如：買股票的人，期待股票的收益能補償他投入的時間和承擔的風險。報酬，就是等待和冒險的回報。</p>
+      </div>
+    </div>
+    <div class="src"><span>📎 出處：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/investment.md">concepts/investment.md</a></span><span>L01 投影片 3</span></div>
+  </section>
+
+  <!-- 02 V-two -->
+  <section class="slide" data-tab="02">
+    <div class="head"><div class="stamp"><small>No.</small><b>02</b></div><div><h2>實質資產 vs 金融資產</h2><p>一個負責生產，一個是分配成果的權利</p></div><span class="deco">🏭</span></div>
+    <div class="body">
+      <div class="row">
+        <div class="sticky yellow" style="--r:-1.5deg"><span class="tape yellow-t"></span>
+          <span class="emoji">🏭</span><h3>實質資產</h3>
+          <p>廠房、機器設備等，用來<span class="hl">創造財貨和提供服務</span>。</p>
+        </div>
+        <div class="sticky blue" style="--r:1.5deg"><span class="tape blue-t"></span>
+          <span class="emoji">📜</span><h3>金融資產</h3>
+          <p>股票、債券等，是對實質資產本身或其收益的<span class="hl p">求償權</span>。</p>
+        </div>
+      </div>
+      <div>
+        <p class="small" style="margin-bottom:8px">✏️ 美國家計單位的資產組成（2019，Table 1.1）</p>
+        <div class="hbar"><div class="a" style="width:28.7%">實質資產 28.7%</div><div class="b" style="width:71.3%">金融資產 71.3%</div></div>
+      </div>
+      <div class="tip">
+        <span class="face">🐷</span>
+        <div class="bubble"><b class="who">小豬老師：</b>你買 Toyota 債券是你的資產，也是 Toyota 的負債；全國加總會抵銷，國家淨值＝實質資產總和！</div>
+      </div>
+    </div>
+    <div class="src"><span>📎 出處：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/real-and-financial-assets.md">concepts/real-and-financial-assets.md</a>、<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/pitfalls/financial-assets-and-national-wealth.md">pitfalls/financial-assets-and-national-wealth.md</a></span><span>L01 投影片 4–7</span></div>
+  </section>
+
+  <!-- 03 V-three -->
+  <section class="slide" data-tab="03">
+    <div class="head"><div class="stamp"><small>No.</small><b>03</b></div><div><h2>金融資產三兄弟</h2><p>之後的課程會一個一個認識它們</p></div><span class="deco">👨‍👦‍👦</span></div>
+    <div class="body" style="justify-content:center">
+      <div class="row" style="gap:34px">
+        <div class="sticky blue" style="--r:-2deg"><span class="tape blue-t"></span>
+          <span class="emoji">🧾</span><h3>老大：負債型</h3>
+          <p class="small muted">又叫固定收益型</p>
+          <ul><li>貨幣市場工具</li><li>債券</li><li>優先股</li></ul>
+          <p class="small muted" style="margin-top:8px">➜ 第三單元</p>
+        </div>
+        <div class="sticky peach" style="--r:1deg"><span class="tape"></span>
+          <span class="emoji">🏢</span><h3>老二：權益型</h3>
+          <p class="small muted">Equity</p>
+          <p>搭配證券分析、財務報表分析一起學。</p>
+          <p class="small muted" style="margin-top:8px">➜ 第四單元</p>
+        </div>
+        <div class="sticky mint" style="--r:-1deg"><span class="tape mint-t"></span>
+          <span class="emoji">🧩</span><h3>老三：衍生性商品</h3>
+          <p class="small muted">Derivatives</p>
+          <p>例如房貸相關的商品，第 10 件小事會看到。</p>
+          <p class="small muted" style="margin-top:8px">➜ 第五單元</p>
+        </div>
+      </div>
+      <p class="small muted center">講義本章只列出分類，詳細介紹在後面的章節。</p>
+    </div>
+    <div class="src"><span>📎 出處：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/financial-asset-classes.md">concepts/financial-asset-classes.md</a></span><span>L01 投影片 8、41</span></div>
+  </section>
+
+  <!-- 04 V-grid4 -->
+  <section class="slide" data-tab="04">
+    <div class="head"><div class="stamp"><small>No.</small><b>04</b></div><div><h2>金融市場的四個超能力</h2><p>為什麼社會需要金融市場？</p></div><span class="deco">✨</span></div>
+    <div class="body">
+      <div class="row">
+        <div class="sticky yellow" style="--r:-1.5deg"><span class="emoji">🔍</span><h3>提供資訊</h3><p>價格有沒有真實反映未來的現金流？能靠市場把資源分配好嗎？</p></div>
+        <div class="sticky pink" style="--r:1deg"><span class="emoji">⏰</span><h3>調整消費時機</h3><p>所得高於消費時拿去投資，提升人生各階段的整體滿足感。</p></div>
+      </div>
+      <div class="row">
+        <div class="sticky mint" style="--r:1deg"><span class="emoji">⚖️</span><h3>配置風險</h3><p>依自己的風險偏好選擇債券或股票，有助於實質資產的累積。</p></div>
+        <div class="sticky peach" style="--r:-1deg"><span class="emoji">🤝</span><h3>所有權與經營權分離</h3><p>股東選出董事會監督經理人，但也帶來小矛盾（下一件小事）。</p></div>
+      </div>
+    </div>
+    <div class="src"><span>📎 出處：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/functions-of-financial-markets.md">concepts/functions-of-financial-markets.md</a></span><span>L01 投影片 9–12</span></div>
+  </section>
+
+  <!-- 05 V-cards -->
+  <section class="slide" data-tab="05">
+    <div class="head"><div class="stamp"><small>No.</small><b>05</b></div><div><h2>老闆和員工的小矛盾</h2><p>代理人問題與公司治理：市場要靠信任運作</p></div><span class="deco">🤝</span></div>
+    <div class="body">
+      <div class="row">
+        <div class="card"><span class="tape"></span>
+          <h3>😤 代理人問題</h3>
+          <p>股東（老闆）和經理人（經營者）之間的潛在衝突。</p>
+          <p style="margin-top:8px"><b>減輕方法：</b>把經理人薪資和營運成果或股價連結；由董事會、外部董監事負責監督。</p>
+        </div>
+        <div class="card"><span class="tape mint-t"></span>
+          <h3>🚫 三種金融醜聞</h3>
+          <p>① 財務報表虛飾<br>② 分析師報告過度樂觀、誤導投資人<br>③ 投資銀行（幫公司發行證券的機構）協助發行股票換取不當利益</p>
+          <p style="margin-top:8px"><b>美國沙賓法案：</b>加強財務揭露、高層要對資訊真實性負責。</p>
+        </div>
+      </div>
+      <p class="small muted">⚠️ 講義寫沙賓法案 2000 年通過，一般認為是 2002 年，待確認。</p>
+    </div>
+    <div class="src"><span>📎 出處：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/agency-problem.md">concepts/agency-problem.md</a>、<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/corporate-governance.md">concepts/corporate-governance.md</a></span><span>L01 投影片 12–15</span></div>
+  </section>
+
+  <!-- 06 V-cards -->
+  <section class="slide" data-tab="06">
+    <div class="head"><div class="stamp"><small>No.</small><b>06</b></div><div><h2>投資要做的兩個決定</h2><p>先資產配置，再證券選擇</p></div><span class="deco">🧺</span></div>
+    <div class="body">
+      <div class="row">
+        <div class="card"><span class="tape yellow-t"></span>
+          <h3>🧺 兩個決定</h3>
+          <p>① <span class="hl">資產配置</span>：資金在各資產類別之間怎麼分配。</p>
+          <p style="margin-top:8px">② <span class="hl p">證券選擇</span>：每一類裡面要挑哪些證券。</p>
+        </div>
+        <div class="card"><span class="tape blue-t"></span>
+          <h3>🧭 兩種建構方式</h3>
+          <p>⬇️ <b>由上而下</b>：先決定資產類別，再挑各類別中的證券。</p>
+          <p style="margin-top:8px">⬆️ <b>由下而上</b>：先挑有投資價值的證券，要小心過度集中在某個產業或地區。</p>
+        </div>
+      </div>
+      <p class="small muted">📝 證券分析是對證券做評價分析，股票比債券更難評估。</p>
+    </div>
+    <div class="src"><span>📎 出處：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/investment-process.md">concepts/investment-process.md</a>、<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/comparisons/top-down-vs-bottom-up.md">comparisons/top-down-vs-bottom-up.md</a></span><span>L01 投影片 16–18</span></div>
+  </section>
+
+  <!-- 07 V-stats -->
+  <section class="slide" data-tab="07">
+    <div class="head"><div class="stamp"><small>No.</small><b>07</b></div><div><h2>沒有白吃的午餐</h2><p>風險與報酬的取捨：想要報酬高，就要坐得住雲霄飛車</p></div><span class="deco">🎢</span></div>
+    <div class="body">
+      <div class="row" style="justify-content:space-around; flex:none">
+        <div style="flex:none; --r:-6deg" class="sticker blue"><div><div class="n">≈12%</div><div class="l">股票平均年報酬</div></div></div>
+        <div style="flex:none; --r:5deg" class="sticker peach"><div><div class="n">−46%</div><div class="l">最差的一年 1931</div></div></div>
+        <div style="flex:none; --r:-4deg" class="sticker pink"><div><div class="n">+55%</div><div class="l">最好的一年 1933</div></div></div>
+      </div>
+      <div class="row">
+        <div class="sticky yellow" style="--r:-1deg"><p>🎢 高風險資產通常有高報酬：股票虧損的機率比債券高，但長期報酬也比較高。</p></div>
+        <div class="sticky mint" style="--r:1deg"><p>🍱 市場競爭很激烈，新資訊很快就反映在價格上，幾乎沒有白吃的午餐。</p></div>
+      </div>
+      <p class="small muted">📈 1980 年投入 S&amp;P 500 的 1 美元，2020 年初約成長到 90 美元（依 Figure 1.2 目測），途中有幾次大跌。</p>
+    </div>
+    <div class="src"><span>📎 出處：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/risk-return-tradeoff.md">concepts/risk-return-tradeoff.md</a></span><span>L01 投影片 19–20、39</span></div>
+  </section>
+
+  <!-- 08 V-two -->
+  <section class="slide" data-tab="08">
+    <div class="head"><div class="stamp"><small>No.</small><b>08</b></div><div><h2>佛系 vs 積極派</h2><p>消極型與積極型投資策略</p></div><span class="deco">🤷</span></div>
+    <div class="body">
+      <div class="row">
+        <div class="sticky pink" style="--r:-1.5deg"><span class="tape"></span>
+          <span class="emoji">🧘</span><h3>佛系派（消極型）</h3>
+          <p>單純持有<span class="hl">多元化的投資組合</span>。</p>
+          <p class="small muted" style="margin-top:10px">心裡想的是：市場價格很快反映資訊，很難一直贏過市場。</p>
+        </div>
+        <div class="sticky peach" style="--r:1.5deg"><span class="tape mint-t"></span>
+          <span class="emoji">🕵️</span><h3>積極派（積極型）</h3>
+          <p>透過<span class="hl p">選股</span>或<span class="hl p">擇時</span>，尋找定價失衡的證券。</p>
+          <p class="small muted" style="margin-top:10px">心裡想的是：市場上仍有被錯誤定價的證券。</p>
+        </div>
+      </div>
+      <div class="tip">
+        <span class="face">🐷</span>
+        <div class="bubble"><b class="who">小豬老師：</b>你是哪一派？第六單元「主動式投資管理」會再深入聊喔！</div>
+      </div>
+    </div>
+    <div class="src"><span>📎 出處：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/comparisons/passive-vs-active.md">comparisons/passive-vs-active.md</a></span><span>L01 投影片 20–21</span></div>
+  </section>
+
+  <!-- 09 V-cards -->
+  <section class="slide" data-tab="09">
+    <div class="head"><div class="stamp"><small>No.</small><b>09</b></div><div><h2>市場裡有誰？</h2><p>有人要錢、有人出錢，還有人居中牽線</p></div><span class="deco">🏦</span></div>
+    <div class="body">
+      <div class="row">
+        <div class="card"><span class="tape"></span>
+          <h3>👥 四種參與者</h3>
+          <p>🏢 <b>公司行號</b>：需要資金<br>🏠 <b>家戶部門</b>：提供資金<br>🏛️ <b>政府部門</b>：需要或提供資金<br>🌉 <b>金融中介機構</b>：借款者與貸款者之間的橋樑</p>
+        </div>
+        <div class="card"><span class="tape mint-t"></span>
+          <h3>🏦 金融中介做什麼</h3>
+          <p><b>商業銀行</b>：從存戶取得資金再放款。<br><b>投資銀行</b>：專長在初級市場，協助初次發行證券；已發行證券的買賣則在次級市場。<br><b>創業投資</b>投資新創企業股權；<b>私募基金</b>買下公司重組後賣出獲利。</p>
+        </div>
+      </div>
+      <p class="small muted">🕰️ 美國 1933–1999 年商銀與投銀分開經營，2008 年後大型投銀倒閉或轉型。</p>
+    </div>
+    <div class="src"><span>📎 出處：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/market-participants.md">concepts/market-participants.md</a>、<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/comparisons/primary-vs-secondary-market.md">comparisons/primary-vs-secondary-market.md</a></span><span>L01 投影片 22–28</span></div>
+  </section>
+
+  <!-- 10 V-flow -->
+  <section class="slide" data-tab="10">
+    <div class="head"><div class="stamp"><small>No.</small><b>10</b></div><div><h2>2008 年金融危機的教訓</h2><p>風險被一層層包裝，最後像骨牌一樣倒下</p></div><span class="deco">⚠️</span></div>
+    <div class="body" style="gap:16px">
+      <div class="flow">
+        <div class="bub"><span class="emoji">🏠</span><b>次級房貸</b><span>貸款超過房價 80%、違約風險高</span></div>
+        <div class="go">➜</div>
+        <div class="bub"><span class="emoji">📦</span><b>證券化</b><span>房貸包裝成可投資的證券</span></div>
+        <div class="go">➜</div>
+        <div class="bub"><span class="emoji">🎁</span><b>CDO</b><span>打包分券；信評有壓力給好評等</span></div>
+        <div class="go">➜</div>
+        <div class="bub"><span class="emoji">🛡️</span><b>CDS</b><span>違約保險；AIG 賣出 4,000 億美元</span></div>
+        <div class="go">➜</div>
+        <div class="bub" style="background:var(--latte); border-color:var(--latte-d)"><span class="emoji">💥</span><b>系統風險</b><span>高槓桿、流動性不足、店頭交易</span></div>
+      </div>
+      <div class="row">
+        <div class="sticky yellow" style="--r:-1deg; padding:16px 20px">
+          <p class="small">🗓️ 2008 年 9 月：Fannie Mae、Freddie Mac 被接管 → Lehman、Merrill Lynch 出現危機 → 政府借 AIG 850 億美元 → 貨幣市場停滯。之後：Dodd-Frank 法案、Volcker Rule。</p>
+        </div>
+        <div class="sticky pink" style="--r:1deg; padding:16px 20px">
+          <p class="small">⚠️ 名字很像別搞混！系統風險（systemic）＝整個金融體系崩潰的風險；系統性風險（systematic）＝分散投資也消除不了的市場風險，之後才會學（補充，非課程資料）。</p>
+        </div>
+      </div>
+    </div>
+    <div class="src"><span>📎 出處：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/financial-crisis-2008.md">concepts/financial-crisis-2008.md</a>、<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/pitfalls/systemic-vs-systematic-risk.md">pitfalls/systemic-vs-systematic-risk.md</a></span><span>L01 投影片 29–37</span></div>
+  </section>
+
+  <!-- 總結 V-recap -->
+  <section class="slide" data-tab="♥">
+    <div class="head"><div class="stamp"><small>ALL</small><b>✔</b></div><div><h2>全部完成！</h2><p>10 件小事，一頁帶走</p></div><span class="deco">🎉</span></div>
+    <div class="body">
+      <div class="todo">
+        <div><i>✔</i>投資＝延遲消費換未來收益</div>
+        <div><i>✔</i>先資產配置，再證券選擇</div>
+        <div><i>✔</i>國家淨值＝實質資產總和</div>
+        <div><i>✔</i>高風險高報酬，沒有白吃的午餐</div>
+        <div><i>✔</i>負債型、權益型、衍生性商品</div>
+        <div><i>✔</i>佛系持有 vs 積極選股擇時</div>
+        <div><i>✔</i>資訊、消費時機、風險、兩權分離</div>
+        <div><i>✔</i>公司、家戶、政府＋金融中介</div>
+        <div><i>✔</i>代理人問題靠激勵與監督減輕</div>
+        <div><i>✔</i>systemic ≠ systematic</div>
+      </div>
+      <div class="tip" style="margin-top:4px">
+        <span class="face">🐷</span>
+        <div class="bubble"><b class="who">小豬老師：</b>辛苦了！下一站是第二單元「現代投資組合理論」，下一本手帳見！</div>
+      </div>
+    </div>
+    <div class="src"><span>📎 出處：本簡報各頁</span><span>L01 投影片 41</span></div>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" aria-label="上一頁">‹</button>
+  <span id="counter">1 / 13</span>
+  <button id="next" aria-label="下一頁">›</button>
+  <span class="hint">← → 翻頁・F 全螢幕</span>
+  <a href="../../../index.html" style="color:#5f8cba; font-size:14px; text-decoration:none; border-bottom:1px dashed #8fb2d6">回首頁</a>
+</div>
+
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var stage = document.getElementById('stage');
+  var counter = document.getElementById('counter');
+  var prev = document.getElementById('prev');
+  var next = document.getElementById('next');
+  var tabsBox = document.getElementById('tabs');
+  var colors = ['#dbe8f5', '#efe2d1'];
+  var i = 0;
+
+  // 把 emoji 包成 .em，套上統一的淺咖啡單色濾鏡；淺藍底便利貼裡的改成淺藍色
+  (function tintEmoji() {
+    var re = /(\p{Extended_Pictographic}(?:️|‍\p{Extended_Pictographic}|[\u{1F3FB}-\u{1F3FF}])*)/gu;
+    var walker = document.createTreeWalker(stage, NodeFilter.SHOW_TEXT, null);
+    var nodes = [];
+    while (walker.nextNode()) { if (re.test(walker.currentNode.nodeValue)) nodes.push(walker.currentNode); re.lastIndex = 0; }
+    nodes.forEach(function (n) {
+      var frag = document.createDocumentFragment();
+      n.nodeValue.split(re).forEach(function (part, k) {
+        if (!part) return;
+        if (k % 2 === 1) { var s = document.createElement('span'); s.className = 'em'; s.textContent = part; frag.appendChild(s); }
+        else frag.appendChild(document.createTextNode(part));
+      });
+      n.parentNode.replaceChild(frag, n);
+    });
+    document.querySelectorAll('.blue .em, .pink .em, .sticker .em').forEach(function (e) { e.classList.add('sky'); });
+  })();
+
+  var tabs = slides.map(function (s, k) {
+    var t = document.createElement('span');
+    t.textContent = s.getAttribute('data-tab') || (k + 1);
+    t.style.background = colors[k % colors.length];
+    t.addEventListener('click', function () { show(k); });
+    tabsBox.appendChild(t);
+    return t;
+  });
+
+  function fit() {
+    var s = Math.min(window.innerWidth / 1280, (window.innerHeight - 60) / 720) * 0.95;
+    stage.style.setProperty('--s', s);
+  }
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (el, k) { el.classList.toggle('active', k === i); });
+    tabs.forEach(function (t, k) { t.classList.toggle('on', k === i); });
+    counter.textContent = (i + 1) + ' / ' + slides.length;
+    prev.disabled = i === 0;
+    next.disabled = i === slides.length - 1;
+    try { history.replaceState(null, '', '#' + (i + 1)); } catch (e) {}
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (['ArrowRight', 'PageDown', ' ', 'Enter'].indexOf(e.key) >= 0) { e.preventDefault(); show(i + 1); }
+    else if (['ArrowLeft', 'PageUp', 'Backspace'].indexOf(e.key) >= 0) { e.preventDefault(); show(i - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) { document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); }
+      else { document.exitFullscreen && document.exitFullscreen(); }
+    }
+  });
+  prev.addEventListener('click', function () { show(i - 1); });
+  next.addEventListener('click', function () { show(i + 1); });
+
+  var x0 = null;
+  document.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 40) show(i + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
+
+  window.addEventListener('resize', fit);
+  fit();
+  var start = parseInt((location.hash || '').slice(1), 10);
+  show(isNaN(start) ? 0 : start - 1);
+})();
+</script>
+</body>
+</html>

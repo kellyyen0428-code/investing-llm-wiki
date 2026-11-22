@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>投資學入門 10 重點</title>
+<style>
+  :root {
+    --ink: #1d2433;
+    --paper: #fbfaf7;
+    --card: #ffffff;
+    --line: #e4ded1;
+    --muted: #6b7280;
+    --gold: #b8862b;
+    --gold-soft: #f6eedd;
+    --blue: #2f5d8a;
+    --blue-soft: #e8eff6;
+    --warn: #b4532a;
+    --warn-soft: #fbece4;
+    --green: #3f7a52;
+    --green-soft: #e7f2ea;
+    --font: "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", "Heiti TC", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: #2a2f3a;
+    font-family: var(--font);
+    color: var(--ink);
+    overflow: hidden;
+  }
+
+  /* ---------- stage ---------- */
+  .stage {
+    position: absolute;
+    left: 50%; top: calc(50% - 26px);
+    width: 1280px; height: 720px;
+    transform: translate(-50%, -50%) scale(var(--s, 1));
+    transform-origin: center center;
+    box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--paper);
+  }
+  .slide {
+    position: absolute; inset: 0;
+    display: none;
+    flex-direction: column;
+    padding: 56px 80px 48px;
+    background: var(--paper);
+  }
+  .slide.active { display: flex; animation: fade .35s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- header ---------- */
+  .head { display: flex; align-items: center; gap: 22px; margin-bottom: 30px; }
+  .num {
+    flex: none;
+    width: 72px; height: 72px; border-radius: 50%;
+    background: var(--ink); color: var(--gold);
+    display: grid; place-items: center;
+    font-size: 30px; font-weight: 700; letter-spacing: 1px;
+  }
+  .head h2 { font-size: 42px; font-weight: 700; line-height: 1.2; }
+  .head p { font-size: 20px; color: var(--muted); margin-top: 4px; }
+  .body { flex: 1; display: flex; flex-direction: column; gap: 22px; font-size: 24px; line-height: 1.6; }
+  .src {
+    margin-top: 18px; padding-top: 12px;
+    border-top: 1px solid var(--line);
+    font-size: 14px; color: var(--muted);
+    display: flex; justify-content: space-between; gap: 20px;
+  }
+  .src a { color: var(--blue); text-decoration: none; }
+  .src a:hover { text-decoration: underline; }
+
+  /* ---------- building blocks ---------- */
+  .row { display: flex; gap: 24px; }
+  .row > * { flex: 1; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 24px 28px;
+  }
+  .card h3 { font-size: 26px; margin-bottom: 10px; }
+  .card p, .card li { font-size: 21px; line-height: 1.6; }
+  .card ul { padding-left: 1.1em; }
+  .card.gold { background: var(--gold-soft); border-color: #ead9b5; }
+  .card.blue { background: var(--blue-soft); border-color: #cfdceb; }
+  .card.warn { background: var(--warn-soft); border-color: #f0cdbb; }
+  .card.green { background: var(--green-soft); border-color: #cbe3d2; }
+  .tag {
+    display: inline-block; font-size: 15px; font-weight: 700;
+    padding: 3px 12px; border-radius: 999px; margin-bottom: 10px;
+    background: var(--ink); color: #fff; letter-spacing: .5px;
+  }
+  .lead { font-size: 30px; font-weight: 700; line-height: 1.5; }
+  .lead em { font-style: normal; color: var(--gold); }
+  .muted { color: var(--muted); }
+  .small { font-size: 18px; }
+  .note {
+    font-size: 16px; color: var(--muted);
+    border-left: 4px solid var(--line); padding-left: 12px;
+  }
+  .arrow { font-size: 34px; color: var(--gold); align-self: center; flex: none !important; }
+
+  /* flow */
+  .flow { display: flex; align-items: stretch; gap: 12px; }
+  .flow .step {
+    flex: 1; background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px 14px; text-align: center;
+  }
+  .flow .step b { display: block; font-size: 21px; margin-bottom: 6px; }
+  .flow .step span { font-size: 16px; color: var(--muted); line-height: 1.5; display: block; }
+  .flow .sep { align-self: center; color: var(--gold); font-size: 26px; font-weight: 700; }
+
+  /* bar */
+  .bar { display: flex; height: 54px; border-radius: 10px; overflow: hidden; font-size: 18px; font-weight: 700; color: #fff; }
+  .bar div { display: flex; align-items: center; justify-content: center; }
+
+  /* stats */
+  .stat { text-align: center; }
+  .stat .big { font-size: 64px; font-weight: 800; line-height: 1.1; }
+  .stat .lbl { font-size: 18px; color: var(--muted); margin-top: 6px; }
+
+  /* table */
+  table { border-collapse: collapse; width: 100%; font-size: 20px; }
+  th, td { border-bottom: 1px solid var(--line); padding: 12px 14px; text-align: left; vertical-align: top; }
+  th { background: var(--ink); color: #fff; font-weight: 700; }
+  td:first-child { font-weight: 700; white-space: nowrap; }
+
+  /* ---------- title / end slides ---------- */
+  .slide.cover { background: var(--ink); color: #fff; justify-content: center; padding: 80px 110px; }
+  .cover .kicker { color: var(--gold); font-size: 22px; letter-spacing: 4px; font-weight: 700; }
+  .cover h1 { font-size: 64px; line-height: 1.25; margin: 22px 0 26px; }
+  .cover h1 span { color: var(--gold); }
+  .cover .sub { font-size: 24px; color: #c9cfdb; line-height: 1.7; }
+  .cover .rule { width: 120px; height: 5px; background: var(--gold); margin: 34px 0 22px; border-radius: 3px; }
+  .cover .meta { font-size: 18px; color: #9aa3b5; }
+
+  .agenda { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 40px; }
+  .agenda div { display: flex; align-items: center; gap: 16px; font-size: 23px; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+  .agenda b { flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--gold-soft); color: var(--gold); display: grid; place-items: center; font-size: 18px; }
+
+  /* ---------- nav ---------- */
+  .nav {
+    position: fixed; left: 0; right: 0; bottom: 0; height: 52px;
+    display: flex; align-items: center; justify-content: center; gap: 18px;
+    color: #c9cfdb; font-size: 15px; user-select: none;
+  }
+  .nav button {
+    background: #3a4150; color: #fff; border: 0; border-radius: 8px;
+    width: 40px; height: 34px; font-size: 18px; cursor: pointer;
+  }
+  .nav button:hover { background: #4a5263; }
+  .nav button:disabled { opacity: .35; cursor: default; }
+  .nav .hint { color: #7f889a; margin-left: 10px; }
+  .progress { position: fixed; left: 0; top: 0; height: 4px; background: var(--gold); transition: width .3s; }
+
+  /* ---------- print: one slide per page ---------- */
+  @media print {
+    @page { size: 1280px 720px; margin: 0; }
+    body { background: #fff; overflow: visible; }
+    .nav, .progress { display: none; }
+    .stage { position: static; transform: none; box-shadow: none; border-radius: 0; width: auto; height: auto; overflow: visible; background: none; }
+    .slide { position: relative; display: flex !important; width: 1280px; height: 720px; page-break-after: always; break-after: page; animation: none; }
+    .slide.cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    th, .num, .bar, .tag, .card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<div class="stage" id="stage">
+
+  <!-- ===== Cover ===== -->
+  <section class="slide cover">
+    <div class="kicker">INVESTMENTS 101</div>
+    <h1>投資學入門<br>新手一定要知道的 <span>10 個重點</span></h1>
+    <div class="sub">整理自投資學 LLM Wiki<br>第 1 章「投資：背景與議題」（張元晨老師講義）</div>
+    <div class="rule"></div>
+    <div class="meta">2026-11-21 ｜ 按 → 或空白鍵翻頁，F 進入全螢幕</div>
+  </section>
+
+  <!-- ===== Agenda ===== -->
+  <section class="slide">
+    <div class="head"><div class="num">☰</div><div><h2>十個重點一覽</h2><p>從「什麼是投資」到「2008 年金融危機的教訓」</p></div></div>
+    <div class="body">
+      <div class="agenda">
+        <div><b>01</b>投資是什麼？</div>
+        <div><b>06</b>代理人問題與公司治理</div>
+        <div><b>02</b>實質資產 vs 金融資產</div>
+        <div><b>07</b>投資的兩大決策</div>
+        <div><b>03</b>金融資產不會讓經濟體變有錢</div>
+        <div><b>08</b>風險與報酬的取捨</div>
+        <div><b>04</b>金融資產的三大類</div>
+        <div><b>09</b>消極型 vs 積極型策略</div>
+        <div><b>05</b>金融市場的四種功能</div>
+        <div><b>10</b>2008 年金融危機的教訓</div>
+      </div>
+    </div>
+    <div class="src"><span>內容來源：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/index.md">wiki/index.md</a></span><span>L01 投影片 2</span></div>
+  </section>
+
+  <!-- ===== 01 ===== -->
+  <section class="slide">
+    <div class="head"><div class="num">01</div><div><h2>投資是什麼？</h2><p>放棄現在，換取未來</p></div></div>
+    <div class="body">
+      <div class="lead">投資是<em>延遲目前</em>對金錢或資源的消費，<br>以換取<em>未來更大</em>的收益。</div>
+      <div class="flow" style="margin-top:10px">
+        <div class="step"><b>今天</b><span>手上有一筆可以花的錢</span></div>
+        <div class="sep">→</div>
+        <div class="step" style="flex:1.4; background:var(--gold-soft); border-color:#ead9b5"><b>付出兩種代價</b><span>⏳ 時間：錢被綁住<br>⚠️ 風險：結果不確定</span></div>
+        <div class="sep">→</div>
+        <div class="step"><b>未來</b><span>期待更大的收益</span></div>
+      </div>
+      <div class="card blue"><p>例：買股票的人，期待股票的收益能<b>補償</b>他投入的時間和承擔的風險。報酬，就是承擔這兩種代價的回報。</p></div>
+    </div>
+    <div class="src"><span>內容來源：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/investment.md">concepts/investment.md</a></span><span>L01 投影片 3</span></div>
+  </section>
+
+  <!-- ===== 02 ===== -->
+  <section class="slide">
+    <div class="head"><div class="num">02</div><div><h2>實質資產 vs 金融資產</h2><p>一個創造價值，一個分配價值</p></div></div>
+    <div class="body">
+      <div class="row">
+        <div class="card gold">
+          <span class="tag">實質資產 Real Assets</span>
+          <h3>用來生產的東西</h3>
+          <p>例如廠房、機器設備。<br>用來<b>創造財貨與提供服務</b>。</p>
+        </div>
+        <div class="card blue">
+          <span class="tag">金融資產 Financial Assets</span>
+          <h3>對生產成果的權利</h3>
+          <p>例如股票、債券。<br>是對實質資產本身或其收益的<b>求償權</b>。</p>
+        </div>
+      </div>
+      <div>
+        <p class="small" style="margin-bottom:8px"><b>美國家計單位的資產組成（2019，Table 1.1）</b></p>
+        <div class="bar">
+          <div style="width:28.7%; background:var(--gold)">實質 28.7%</div>
+          <div style="width:71.3%; background:var(--blue)">金融資產 71.3%（退休金準備 21.2%、公司股權 14.0%…）</div>
+        </div>
+      </div>
+      <p class="note">補充說明（非課程資料）：常見記法是「實質資產是餅，金融資產是分餅的權利」。</p>
+    </div>
+    <div class="src"><span>內容來源：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/real-and-financial-assets.md">concepts/real-and-financial-assets.md</a></span><span>L01 投影片 4–5</span></div>
+  </section>
+
+  <!-- ===== 03 ===== -->
+  <section class="slide">
+    <div class="head"><div class="num">03</div><div><h2>金融資產不會讓經濟體變有錢</h2><p>新手最常見的誤解之一</p></div></div>
+    <div class="body">
+      <div class="row" style="align-items:stretch">
+        <div class="card">
+          <span class="tag">你</span>
+          <h3>買了 Toyota 的債券</h3>
+          <p style="font-size:28px; color:var(--green); font-weight:700">＋ 金融資產</p>
+        </div>
+        <div class="arrow">＋</div>
+        <div class="card">
+          <span class="tag">Toyota</span>
+          <h3>發行了這張債券</h3>
+          <p style="font-size:28px; color:var(--warn); font-weight:700">＋ 金融負債</p>
+        </div>
+        <div class="arrow">＝</div>
+        <div class="card gold" style="display:flex; flex-direction:column; justify-content:center; text-align:center">
+          <p style="font-size:44px; font-weight:800">0</p>
+          <p>加總後互相抵銷</p>
+        </div>
+      </div>
+      <div class="lead">所以：經濟體的淨值 ＝ <em>所有實質資產的總和</em></div>
+      <div class="card blue"><p>證據：Table 1.2「美國國內資產淨額」約 69.7 兆美元，只有不動產、設備與智慧財產、存貨、耐久消費財，<b>沒有任何金融資產</b>。但對個別家庭來說，金融資產仍然是財富的一部分，差別在於加總的層級。</p></div>
+    </div>
+    <div class="src"><span>內容來源：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/pitfalls/financial-assets-and-national-wealth.md">pitfalls/financial-assets-and-national-wealth.md</a></span><span>L01 投影片 5–7</span></div>
+  </section>
+
+  <!-- ===== 04 ===== -->
+  <section class="slide">
+    <div class="head"><div class="num">04</div><div><h2>金融資產的三大類</h2><p>也是之後課程的三個單元</p></div></div>
+    <div class="body">
+      <div class="row">
+        <div class="card blue">
+          <span class="tag">第三單元</span>
+          <h3>負債型有價證券</h3>
+          <p class="muted small" style="margin-bottom:8px">又稱固定收益型有價證券</p>
+          <ul><li>貨幣市場工具</li><li>債券</li><li>優先股</li></ul>
+        </div>
+        <div class="card gold">
+          <span class="tag">第四單元</span>
+          <h3>權益型有價證券</h3>
+          <p class="muted small" style="margin-bottom:8px">Equity</p>
+          <p>搭配證券分析與財務報表分析一起學</p>
+        </div>
+        <div class="card green">
+          <span class="tag">第五單元</span>
+          <h3>衍生性金融商品</h3>
+          <p class="muted small" style="margin-bottom:8px">Derivatives</p>
+          <p>本章的例子：CDO、CDS（見重點 10）</p>
+        </div>
+      </div>
+      <p class="note">簡報本章只列出分類；各類的詳細定義會在後續章節說明。</p>
+    </div>
+    <div class="src"><span>內容來源：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/financial-asset-classes.md">concepts/financial-asset-classes.md</a></span><span>L01 投影片 8、41</span></div>
+  </section>
+
+  <!-- ===== 05 ===== -->
+  <section class="slide">
+    <div class="head"><div class="num">05</div><div><h2>金融市場的四種功能</h2><p>為什麼經濟社會需要金融市場？</p></div></div>
+    <div class="body">
+      <div class="row">
+        <div class="card"><span class="tag">1</span><h3>資訊提供者</h3><p>資產價格是否真實反映未來現金流？能否靠市場做出最適的資源配置？</p></div>
+        <div class="card"><span class="tag">2</span><h3>消費時機</h3><p>所得高於消費的階段，把多的錢拿去投資，提升人生各階段的整體滿足感。</p></div>
+      </div>
+      <div class="row">
+        <div class="card"><span class="tag">3</span><h3>風險配置</h3><p>投資人依自己的風險偏好選擇債券或股票，有助於實質資產的累積。</p></div>
+        <div class="card"><span class="tag">4</span><h3>所有權與經營權分離</h3><p>股東不必親自經營，由董事會監督管理階層，但也帶來代理人問題（重點 06）。</p></div>
+      </div>
+    </div>
+    <div class="src"><span>內容來源：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/functions-of-financial-markets.md">concepts/functions-of-financial-markets.md</a></span><span>L01 投影片 9–12</span></div>
+  </section>
+
+  <!-- ===== 06 ===== -->
+  <section class="slide">
+    <div class="head"><div class="num">06</div><div><h2>代理人問題與公司治理</h2><p>市場要靠信任才能運作</p></div></div>
+    <div class="body">
+      <div class="row">
+        <div class="card gold">
+          <h3>代理人問題</h3>
+          <p>股東（所有者）與經理人（經營者）之間的潛在衝突。</p>
+          <p style="margin-top:10px"><b>減輕方法</b></p>
+          <ul><li>經理人薪資與營運成果或股價連結</li><li>董事會監督管理階層</li><li>外部董監事扮演監督角色</li></ul>
+        </div>
+        <div class="card">
+          <h3>三類重大金融醜聞</h3>
+          <ul><li>虛飾的財務報表</li><li>分析師過度樂觀的報告誤導投資人</li><li>投資銀行協助發行股票換取不當利益</li></ul>
+          <p style="margin-top:10px"><b>美國沙賓法案</b>：加強財務揭露、高層對資訊真實性負責、外部董監事監督。</p>
+        </div>
+      </div>
+      <p class="note">⚠️ 簡報寫沙賓法案於 2000 年通過；一般認為是 2002 年，待確認。治理與道德敗壞會讓投資人對市場失去信心，傷害整個經濟體系。</p>
+    </div>
+    <div class="src"><span>內容來源：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/agency-problem.md">concepts/agency-problem.md</a>、<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/corporate-governance.md">corporate-governance.md</a></span><span>L01 投影片 12–15</span></div>
+  </section>
+
+  <!-- ===== 07 ===== -->
+  <section class="slide">
+    <div class="head"><div class="num">07</div><div><h2>投資的兩大決策</h2><p>資產配置 ＋ 證券選擇</p></div></div>
+    <div class="body">
+      <div class="row">
+        <div class="card blue"><span class="tag">Asset Allocation</span><h3>資產配置</h3><p>資金在各<b>資產類別</b>之間怎麼分配。</p></div>
+        <div class="card gold"><span class="tag">Security Selection</span><h3>證券選擇</h3><p>每個資產類別裡，要買<b>哪些證券</b>。</p></div>
+      </div>
+      <table>
+        <tr><th style="width:18%">建構方式</th><th>順序</th><th style="width:34%">要注意</th></tr>
+        <tr><td>由上而下</td><td>先決定資產類別 → 再挑各類別中的證券</td><td>—</td></tr>
+        <tr><td>由下而上</td><td>先挑有投資價值的個別證券</td><td>可能過度集中在某產業或地區</td></tr>
+      </table>
+      <p class="small"><b>證券分析</b>：對有價證券做評價分析；股票比債券更難評估。</p>
+    </div>
+    <div class="src"><span>內容來源：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/investment-process.md">concepts/investment-process.md</a>、<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/comparisons/top-down-vs-bottom-up.md">top-down-vs-bottom-up.md</a></span><span>L01 投影片 16–18</span></div>
+  </section>
+
+  <!-- ===== 08 ===== -->
+  <section class="slide">
+    <div class="head"><div class="num">08</div><div><h2>風險與報酬的取捨</h2><p>金融市場幾乎沒有白吃的午餐</p></div></div>
+    <div class="body">
+      <div class="row">
+        <div class="card stat"><div class="big" style="color:var(--blue)">≈12%</div><div class="lbl">股票平均年報酬</div></div>
+        <div class="card stat"><div class="big" style="color:var(--warn)">−46%</div><div class="lbl">最差的一年（1931）</div></div>
+        <div class="card stat"><div class="big" style="color:var(--green)">+55%</div><div class="lbl">最好的一年（1933）</div></div>
+      </div>
+      <div class="row">
+        <div class="card gold"><p><b>高風險資產通常有高報酬。</b>股票虧損的機率比債券高，但長期報酬也比債券高。</p></div>
+        <div class="card"><p><b>市場競爭非常強</b>：資產價格很快反映新資訊，想要更高報酬就得承擔更高風險。</p></div>
+      </div>
+      <p class="note">Figure 1.2：1980 年投入 S&amp;P 500 的 1 美元，到 2020 年初約成長為 90 美元（依圖目測），但途中歷經 2000–2002、2008、2020 的大跌。</p>
+    </div>
+    <div class="src"><span>內容來源：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/risk-return-tradeoff.md">concepts/risk-return-tradeoff.md</a></span><span>L01 投影片 19–20、39</span></div>
+  </section>
+
+  <!-- ===== 09 ===== -->
+  <section class="slide">
+    <div class="head"><div class="num">09</div><div><h2>消極型 vs 積極型投資策略</h2><p>你相信自己能打敗市場嗎？</p></div></div>
+    <div class="body">
+      <div class="row">
+        <div class="card blue">
+          <span class="tag">Passive</span>
+          <h3>消極型投資策略</h3>
+          <p>單純持有<b>多元化</b>的投資組合。</p>
+          <p class="small muted" style="margin-top:12px">背後的想法：市場競爭激烈、價格很快反映資訊，很難持續打敗市場。</p>
+        </div>
+        <div class="card gold">
+          <span class="tag">Active</span>
+          <h3>積極型投資策略</h3>
+          <p>透過<b>選股</b>或<b>擇時</b>，尋找定價失衡的證券進行投資。</p>
+          <p class="small muted" style="margin-top:12px">背後的想法：市場上仍有被錯誤定價的證券可以利用。</p>
+        </div>
+      </div>
+      <p class="note">這個問題會在課程第六單元「主動式投資管理」再深入討論。</p>
+    </div>
+    <div class="src"><span>內容來源：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/comparisons/passive-vs-active.md">comparisons/passive-vs-active.md</a></span><span>L01 投影片 20–21</span></div>
+  </section>
+
+  <!-- ===== 10 ===== -->
+  <section class="slide">
+    <div class="head"><div class="num">10</div><div><h2>2008 年金融危機的教訓</h2><p>風險被層層包裝後，傳染到整個金融體系</p></div></div>
+    <div class="body" style="gap:18px">
+      <div class="flow">
+        <div class="step"><b>次級房貸</b><span>貸款超過房價 80%、核貸標準低、違約風險高</span></div>
+        <div class="sep">→</div>
+        <div class="step"><b>證券化</b><span>房貸包裝成可投資的證券</span></div>
+        <div class="sep">→</div>
+        <div class="step"><b>CDO</b><span>打包貸款再分券；信評機構有壓力給好評等</span></div>
+        <div class="sep">→</div>
+        <div class="step"><b>CDS</b><span>違約保險；AIG 賣出 4,000 億美元</span></div>
+        <div class="sep">→</div>
+        <div class="step" style="background:var(--warn-soft); border-color:#f0cdbb"><b>系統風險</b><span>高槓桿、流動性不足、店頭交易</span></div>
+      </div>
+      <div class="row">
+        <div class="card small" style="padding:18px 22px">
+          <p><b>2008 年 9 月</b>：Fannie Mae、Freddie Mac 被接管 → Lehman、Merrill Lynch 出現危機 → 政府借 850 億美元給 AIG → 貨幣市場停滯。</p>
+          <p style="margin-top:6px"><b>改革</b>：Dodd-Frank 法案、Volcker Rule（限制銀行自營交易）。</p>
+        </div>
+        <div class="card warn small" style="padding:18px 22px">
+          <p><b>⚠️ 易混淆名詞</b></p>
+          <p>系統風險（<b>systemic</b>）＝金融體系崩潰的風險<br>系統性風險（<b>systematic</b>）＝無法分散的市場風險，之後投資組合理論會學到</p>
+        </div>
+      </div>
+    </div>
+    <div class="src"><span>內容來源：<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/concepts/financial-crisis-2008.md">concepts/financial-crisis-2008.md</a>、<a href="https://github.com/kellyyen0428-code/investing-llm-wiki/blob/main/wiki/pitfalls/systemic-vs-systematic-risk.md">systemic-vs-systematic-risk.md</a></span><span>L01 投影片 29–37</span></div>
+  </section>
+
+  <!-- ===== Recap ===== -->
+  <section class="slide cover">
+    <div class="kicker">RECAP</div>
+    <h1 style="font-size:46px; margin:14px 0 22px">一頁帶走 <span>10 個重點</span></h1>
+    <div class="sub" style="font-size:20px; line-height:1.85; columns:2; column-gap:56px">
+      01 投資＝延遲消費，換取未來收益<br>
+      02 實質資產創造價值，金融資產是求償權<br>
+      03 經濟體淨值＝實質資產總和<br>
+      04 固定收益、權益、衍生性商品<br>
+      05 資訊、消費時機、風險配置、兩權分離<br>
+      06 代理人問題靠激勵與治理來減輕<br>
+      07 先資產配置，再證券選擇<br>
+      08 高風險、高報酬，沒有白吃的午餐<br>
+      09 消極持有 vs 積極選股擇時<br>
+      10 systemic ≠ systematic
+    </div>
+    <div class="rule"></div>
+    <div class="meta">下一步：第二單元「現代投資組合理論」</div>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" aria-label="上一頁">‹</button>
+  <span id="counter">1 / 13</span>
+  <button id="next" aria-label="下一頁">›</button>
+  <span class="hint">← → 翻頁 ｜ F 全螢幕</span>
+</div>
+
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var stage = document.getElementById('stage');
+  var counter = document.getElementById('counter');
+  var progress = document.getElementById('progress');
+  var prev = document.getElementById('prev');
+  var next = document.getElementById('next');
+  var i = 0;
+
+  function fit() {
+    var s = Math.min(window.innerWidth / 1280, (window.innerHeight - 60) / 720) * 0.96;
+    stage.style.setProperty('--s', s);
+  }
+
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (el, k) { el.classList.toggle('active', k === i); });
+    counter.textContent = (i + 1) + ' / ' + slides.length;
+    progress.style.width = ((i + 1) / slides.length * 100) + '%';
+    prev.disabled = i === 0;
+    next.disabled = i === slides.length - 1;
+    try { history.replaceState(null, '', '#' + (i + 1)); } catch (e) {}
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (['ArrowRight', 'PageDown', ' ', 'Enter'].indexOf(e.key) >= 0) { e.preventDefault(); show(i + 1); }
+    else if (['ArrowLeft', 'PageUp', 'Backspace'].indexOf(e.key) >= 0) { e.preventDefault(); show(i - 1); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') {
+      if (!document.fullscreenElement) { document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); }
+      else { document.exitFullscreen && document.exitFullscreen(); }
+    }
+  });
+  prev.addEventListener('click', function () { show(i - 1); });
+  next.addEventListener('click', function () { show(i + 1); });
+
+  var x0 = null;
+  document.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 40) show(i + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
+
+  window.addEventListener('resize', fit);
+  fit();
+  var start = parseInt((location.hash || '').slice(1), 10);
+  show(isNaN(start) ? 0 : start - 1);
+})();
+</script>
+</body>
+</html>
